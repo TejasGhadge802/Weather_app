@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TG Weather</title>
+    <style>
+        body {
+            background-color: #B0B0B0;
+            margin: 0;
+            padding: 0;
+        }
+
+        #card {
+            background-color: #7984FF;
+            padding: 15px;
+            margin: 10px auto;
+            width: 30%;
+            max-width: 500px;
+            min-width: 280px;
+            text-align: center;
+            border: 1px solid black;
+            box-shadow: 7px 7px 5px #7E808E;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 2rem;
+        }
+        
+        #inputContainer{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+        
+        button{
+            padding: 2px;
+            background-color: #B1AFAF;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        
+        button:hover{
+            background-color: #484848;
+        }
+        
+        #output{
+            text-align: left;
+        }
+        
+        /* Mobile Responsive Design */
+        @media screen and (max-width: 600px) {
+            #card {
+                width: 60%; 
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            #inputCity {
+                width: 70%;
+                font-size: 1rem;
+            }
+            
+            button{
+                font-size: 1rem;
+                width: 40%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Weather App</h1>
+    <div id="card">
+        <div id="inputContainer">
+            <label for="inputCity">City:</label>
+            <input type="text" name="city" id="inputCity" value="Mumbai" />
+        </div>         
+        <button onclick="getWeather()" style="margin-top: 10px">Submit</button>
+
+        <span id="output">
+            <p id="city"></p>
+            <p id="weather"></p>
+            <p id="temp">️</p>
+            <p id="hum"></p>
+            <p id="wind"></p>
+        </span>
+    </div>
+
+
+
+
+    <script>
+        async function getWeather() {
+            const inputCity = document.getElementById('inputCity').value;
+            const card = document.getElementById('card');
+
+            let city = document.getElementById('city');
+            let weather = document.getElementById('weather');
+            let temp = document.getElementById('temp');
+            let hum = document.getElementById('hum');
+            let wind = document.getElementById('wind');
+
+            const key = 'c7e9701ae03173433e44d1da906dbfd2';
+            const URL = `https://api.openweathermap.org/data/2.5/weather?q=${inputCity}&appid=${key}&units=metric`;
+
+            try {
+                const response = await fetch(URL); //send request to URL wait untill response 
+                const data = await response.json();
+
+                if (response.ok) {
+                    card.style.height = '210px';
+
+                    city.innerText = `🌍 City: ${data.name}`;
+                    weather.innerText = `🌥️ Weather: ${data.weather[0].description}`;
+                    temp.innerText = `🌡️ Temperature: ${data.main.temp}°C`;
+                    hum.innerText = `💧 Humidity: ${data.main.humidity}%`;
+                    wind.innerText = `🍃 Wind speed: ${data.wind.speed}m/s`;
+                } else {
+                    alert(`❌ Error: ${data.message}`);
+                }
+            } catch (error) {
+                console.error("⚠️ Network Error! Please check your internet connection.");
+            }
+        }
+    </script>
+</body>
+
+</html>
